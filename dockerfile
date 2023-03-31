@@ -17,6 +17,9 @@ COPY dist dist
 # install deps
 RUN npm install
 
+# cast in iframe
+RUN sed -i 's/force=True/force=False/g' /usr/lib/python3.10/site-packages/catt/controllers.py
+
 # Expose ports
 EXPOSE 8080
 

@@ -41,7 +41,7 @@ export const useChromecast = () => {
 			devices.forEach(async (device, i) => {
 				try {
 					await axios
-						.get(`/cast/${device.address}?url=${url}`)
+						.get(`/cast/${device.address}?url=${encodeURIComponent(url)}`)
 						.then((res) => {
 							if (res.data === 'ok') {
 								enqueueSnackbar(`URL Casting to ${device.friendlyName}`, { variant: 'success' });

@@ -72,7 +72,7 @@ app.post('/devices', (req, res) => {
 
 app.get('/cast/:host', (req, res) => {
 	try {
-		castUrl(req.params.host, req.query.url).then((result) => {
+		castUrl(req.params.host, req.query.url as string).then((result) => {
 			res.send(result);
 		});
 	} catch (error) {
@@ -98,11 +98,17 @@ app.listen(port, () => {
 	return console.log(`Server is listening on port ${port}`);
 });
 
-async function castUrl(host, url) {
+async function castUrl(host: string, url: string) {
+	url = decodeURIComponent(url);
+
+	if (url.includes('docs.google.com/presentation')) {
+		url = url.replace('/pub', '/embed');
+	}
+
 	console.log('Casting:', host, '<--', url);
 
 	return new Promise((confirm, reject) => {
-		const cmd = `catt -d ${host} stop && catt -d ${host} cast_site ${url}`;
+		const cmd = `catt -d ${host} stop && catt -d ${host} cast_site "${url}"`;
 
 		console.log('Running:', cmd);
 
@@ -124,7 +130,7 @@ async function castUrl(host, url) {
 	});
 }
 
-async function stopCast(host) {
+async function stopCast(host: string) {
 	console.log('Stopping:', host);
 
 	return new Promise((confirm, reject) => {
